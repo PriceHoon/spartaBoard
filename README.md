@@ -35,10 +35,10 @@
 * 선택한 게시글 삭제 API (비밀번호 확인할 것) - Done
 
 ### 2022.12.14 요구사항에 따른 진행상황(회원가입만 진행된 상태)
-| Function | Method   | URL     | Request                                     | Response   |
-|----------|--------|---------|---------------------------------------------|----------------|
-| 회원가입     | POST | /signup | {<br>"name": "String",<br>"pwd": "String"<br>} | |
-| 로그인      | POST    | /login  | {<br>"name": "String",<br>"pwd": "String"<br>}                                             | |
+| Function | Method   | URL         | Request                                     | Response   |
+|----------|--------|-------------|---------------------------------------------|----------------|
+| 회원가입     | POST | user/signup | {<br>"name": "String",<br>"pwd": "String"<br>} | |
+| 로그인      | POST    | user/login  | {<br>"name": "String",<br>"pwd": "String"<br>}                                             | |
 
 
 
