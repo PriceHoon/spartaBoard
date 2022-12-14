@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
 @NoArgsConstructor
+@Entity
 public class Board extends Timestamped {
 
     @Id
@@ -24,6 +24,10 @@ public class Board extends Timestamped {
 
     @Column(nullable = false)
     private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
     public Board(BoardRequestDTO boardDto) {
         this.title = boardDto.getTitle();
