@@ -19,8 +19,8 @@ public class Board extends Timestamped {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
-    private String pwd;
+//    @Column(nullable = false)
+//    private String pwd;
 
     @Column(nullable = false)
     private String contents;
@@ -29,11 +29,12 @@ public class Board extends Timestamped {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    public Board(BoardRequestDTO boardDto) {
+    public Board(BoardRequestDTO boardDto , User user) {
         this.title = boardDto.getTitle();
         this.username = boardDto.getUsername();
-        this.pwd = boardDto.getPwd();
+//        this.pwd = boardDto.getPwd();
         this.contents = boardDto.getContents();
+        this.user = user;
     }
     public void update(BoardRequestDTO boardDto){
         this.title = boardDto.getTitle();
