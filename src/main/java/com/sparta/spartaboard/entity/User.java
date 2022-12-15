@@ -19,7 +19,7 @@ public class User {
     private Long id;
 
     @Column
-    private String name;
+    private String username;
 
     @Column
     private String pwd;
@@ -28,7 +28,7 @@ public class User {
     List<Board> boardList = new ArrayList<>();
 
     public User(SignUpDto signUpDto) {
-        this.name = signUpDto.getName();
+        this.username = signUpDto.getUsername();
         this.pwd = signUpDto.getPwd();
     }
 }
