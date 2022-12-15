@@ -6,6 +6,7 @@ import com.sparta.spartaboard.entity.Board;
 import com.sparta.spartaboard.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +39,13 @@ public class BoardController {
     }
 
     @PutMapping("/board/list/{id}")
-    public Long updateBoard(@PathVariable Long id, @RequestBody BoardRequestDTO boardDto){
-        return boardService.update(id,boardDto);
+    public Board updateBoard(@PathVariable Long id, @RequestBody BoardRequestDTO boardDto , HttpServletRequest request){
+        return boardService.update(id,boardDto,request);
     }
 
-//    @DeleteMapping("/board/list/{id}")
-//    public Long deleteBoard(@PathVariable Long id,@RequestBody BoardRequestDTO boardDto){
-//        return boardService.delete(id,boardDto);
-//    }
+    @DeleteMapping("/board/list/{id}")
+    public ResponseEntity deleteBoard(@PathVariable Long id, @RequestBody BoardRequestDTO boardDto, HttpServletRequest request){
+        return boardService.delete(id,boardDto,request);
+    }
 
 }
