@@ -2,9 +2,10 @@ package com.sparta.spartaboard.service;
 
 
 import com.sparta.spartaboard.dto.BoardRequestDTO;
-import com.sparta.spartaboard.dto.DeleteSuccessDto;
+import com.sparta.spartaboard.dto.DeleteResponseDto;
 import com.sparta.spartaboard.entity.Board;
 import com.sparta.spartaboard.entity.User;
+import com.sparta.spartaboard.entity.UserRoleEnum;
 import com.sparta.spartaboard.jwt.JwtUtil;
 import com.sparta.spartaboard.repository.BoardRepository;
 import com.sparta.spartaboard.repository.UserRepository;
@@ -100,11 +101,14 @@ public class BoardService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            if (!(board.getUser().getId() == user.getId())) {
-                throw new IllegalArgumentException("해당 사용자가 아니면 게시글을 수정할 수 없습니다!");
+            if (board.getUser().getId() == user.getId() || user.getUserRoleEnum().equals(UserRoleEnum.ADMIN)) {
+
+                board.update(boardDto);
+                return board;
+            }else{
+                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 수정할 수 없습니다!");
             }
-            board.update(boardDto);
-            return board;
+
         }
         return null;
     }
@@ -134,16 +138,20 @@ public class BoardService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            if (!(board.getUser().getId() == user.getId())) {
-                throw new IllegalArgumentException("해당 사용자가 아니면 게시글을 삭제할 수 없습니다!");
+            if (board.getUser().getId() == user.getId() || user.getUserRoleEnum().equals(UserRoleEnum.ADMIN)) {
+
+                boardRepository.deleteById(id);
+                DeleteResponseDto deleteResponseDto = new DeleteResponseDto();
+                deleteResponseDto.setMsg("게시글 삭제 성공!");
+                deleteResponseDto.setStatusCode(HttpStatus.OK.value());
+                return ResponseEntity.status(HttpStatus.OK).body(deleteResponseDto);
+
+            }else{
+                throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
+
             }
 
-            boardRepository.deleteById(id);
 
-            DeleteSuccessDto deleteSuccessDto = new DeleteSuccessDto();
-            deleteSuccessDto.setMsg("게시글 삭제 성공!");
-            deleteSuccessDto.setStatusCode(200);
-            return ResponseEntity.status(HttpStatus.OK).body(deleteSuccessDto);
         }
         return null;
     }
