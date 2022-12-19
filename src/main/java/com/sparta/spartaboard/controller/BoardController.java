@@ -48,4 +48,7 @@ public class BoardController {
         return boardService.delete(id,boardDto,request);
     }
 
+    //댓글 기능 구현
+//    @PostMapping()
+
 }

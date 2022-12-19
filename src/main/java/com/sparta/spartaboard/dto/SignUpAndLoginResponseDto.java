@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUpSuccessDto {
+public class SignUpAndLoginResponseDto {
 
     private String msg;
     private int StatusCode;

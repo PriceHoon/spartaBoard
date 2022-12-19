@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -28,6 +31,9 @@ public class Board extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    @OneToMany
+    private List<Comment> comments = new ArrayList<>();
 
     public Board(BoardRequestDTO boardDto , User user) {
         this.title = boardDto.getTitle();
