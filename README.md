@@ -84,3 +84,10 @@
 | 특정 게시글 조회      | GET    | /board/list/{id} | -                                                                                     | {<br>"createdAt": "2022-12-16T00:32:45.02639",<br>"modifiedAt": "2022-12-16T00:32:45.02639",<br>"id": Long,<br>"title": String,<br>"username": String,<br>"contents": String,<br>"user": {<br>"id": Long,<br>"username": String,<br>"pwd": String,<br>"boardList": []<br>}<br>} |
 | 회원별 게시글 수정     | PUT    | /board/list/{id} | JWT Bearer {<br>"title": "String",<br>"username":"String",<br>"contents":"String"<br>}                                                                                      | {<br>"createdAt": "2022-12-16T00:32:45.02639",<br>"modifiedAt": "2022-12-16T00:32:45.02639",<br>"id": Long,<br>"title": String,<br>"username": String,<br>"contents": String,<br>"user": {<br>"id": Long,<br>"username": String,<br>"pwd": String,<br>"boardList": []<br>}<br>} |
 | 회원별 게시글 삭제     | DELETE | user/login/{id}   |JWT Bearer | {<br>"msg": "삭제 성공",<br>"statusCode": 200<br>}                                                                                                                                                                                                                                  |
+
+### 2022.12.19 요구사항에 따른 진행상황 
+1. 회원 가입 API 회원 권한 부여하기 (ADMIN, USER) 
+   - ADMIN 회원은 모든 게시글, 댓글 수정 / 삭제 가능 
+   - API 명세는 아직 크게 달라진 것이 없어서 따로 첨부하지 않음.
+   - 작업 상황 현재 Done!
+   - 내일 댓글에 대한 작업을 이어나갈 예정.
