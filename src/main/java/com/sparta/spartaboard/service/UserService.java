@@ -3,7 +3,7 @@ package com.sparta.spartaboard.service;
 
 import com.sparta.spartaboard.dto.LoginRequestDto;
 import com.sparta.spartaboard.dto.SignUpRequestDto;
-import com.sparta.spartaboard.dto.SignUpAndLoginResponseDto;
+import com.sparta.spartaboard.dto.ResponseMsgStatusCodeDto;
 import com.sparta.spartaboard.entity.User;
 import com.sparta.spartaboard.entity.UserRoleEnum;
 import com.sparta.spartaboard.jwt.JwtUtil;
@@ -46,11 +46,8 @@ public class UserService {
         User user = new User(signUpDto);
         userRepository.save(user);
 
-        SignUpAndLoginResponseDto signUpAndLoginResponseDto = new SignUpAndLoginResponseDto();
-        signUpAndLoginResponseDto.setMsg("회원가입 완료!");
-        signUpAndLoginResponseDto.setStatusCode(HttpStatus.OK.value());
-
-        return ResponseEntity.status(HttpStatus.OK).body(signUpAndLoginResponseDto);
+        ResponseMsgStatusCodeDto responseMsgStatusCodeDto = new ResponseMsgStatusCodeDto("회원가입 완료!",HttpStatus.OK.value());
+        return ResponseEntity.status(HttpStatus.OK).body(responseMsgStatusCodeDto);
     }
 
     public ResponseEntity login(LoginRequestDto loginRequestDto, HttpServletResponse response){
@@ -67,11 +64,9 @@ public class UserService {
             throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        SignUpAndLoginResponseDto signUpAndLoginResponseDto = new SignUpAndLoginResponseDto();
-        signUpAndLoginResponseDto.setMsg("로그인 완료!");
-        signUpAndLoginResponseDto.setStatusCode(HttpStatus.OK.value());
+        ResponseMsgStatusCodeDto responseMsgStatusCodeDto = new ResponseMsgStatusCodeDto("로그인 완료!",HttpStatus.OK.value());
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(),user.getUserRoleEnum()));
-        return ResponseEntity.status(HttpStatus.OK).body(signUpAndLoginResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMsgStatusCodeDto);
     }
 }
