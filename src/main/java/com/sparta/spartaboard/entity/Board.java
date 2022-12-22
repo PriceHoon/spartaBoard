@@ -22,17 +22,16 @@ public class Board extends Timestamped {
     @Column(nullable = false)
     private String username;
 
-//    @Column(nullable = false)
-//    private String pwd;
 
     @Column(nullable = false)
     private String contents;
 
+    //fetType Lazy를 사용하는 순간 예외 터짐
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public Board(BoardRequestDTO boardDto , User user) {

@@ -71,10 +71,10 @@
    - 선택한 게시글을 삭제하고 Client 로 성공했다는 메시지, 상태코드 반환하기
 
 ### 2022.12.15 요구사항에 따른 진행상황 API 명세( About User )
-| Function | Method   | URL         | Request                                            | Response                                         |
-|----------|--------|-------------|----------------------------------------------------|--------------------------------------------------|
-| 회원가입     | POST | user/signup | {<br>"username": "String",<br>"pwd": "String"<br>} | {<br>"msg": "회원가입 성공",<br>"statusCode": 200<br>} |
-| 로그인      | POST    | user/login  | {<br>"username": "String",<br>"pwd": "String"<br>} | {<br>"msg": "로그인 성공",<br>"statusCode": 200<br>}  |
+| Function | Method   | URL          | Request                                            | Response                                         |
+|----------|--------|--------------|----------------------------------------------------|--------------------------------------------------|
+| 회원가입     | POST | /user/signup | {<br>"username": "String",<br>"pwd": "String"<br>} | {<br>"msg": "회원가입 성공",<br>"statusCode": 200<br>} |
+| 로그인      | POST    | /user/login  | {<br>"username": "String",<br>"pwd": "String"<br>} | {<br>"msg": "로그인 성공",<br>"statusCode": 200<br>}  |
 
 ### 2022.12.15 요구사항에 따른 진행상황 API 명세( About Board )
 | Function       | Method | URL              | Request                                                                               | Response                                                                                                                                                                                                                                                                        |
@@ -83,7 +83,7 @@
 | 회원별 게시글 작성(추가) | POST   | /board/list      | JWT Bearer {<br>"title": "String",<br>"username":"String",<br>"contents":"String"<br>} | {<br>"createdAt": "2022-12-16T00:32:45.02639",<br>"modifiedAt": "2022-12-16T00:32:45.02639",<br>"id": Long,<br>"title": String,<br>"username": String,<br>"contents": String,<br>"user": {<br>"id": Long,<br>"username": String,<br>"pwd": String,<br>"boardList": []<br>}<br>} |
 | 특정 게시글 조회      | GET    | /board/list/{id} | -                                                                                     | {<br>"createdAt": "2022-12-16T00:32:45.02639",<br>"modifiedAt": "2022-12-16T00:32:45.02639",<br>"id": Long,<br>"title": String,<br>"username": String,<br>"contents": String,<br>"user": {<br>"id": Long,<br>"username": String,<br>"pwd": String,<br>"boardList": []<br>}<br>} |
 | 회원별 게시글 수정     | PUT    | /board/list/{id} | JWT Bearer {<br>"title": "String",<br>"username":"String",<br>"contents":"String"<br>}                                                                                      | {<br>"createdAt": "2022-12-16T00:32:45.02639",<br>"modifiedAt": "2022-12-16T00:32:45.02639",<br>"id": Long,<br>"title": String,<br>"username": String,<br>"contents": String,<br>"user": {<br>"id": Long,<br>"username": String,<br>"pwd": String,<br>"boardList": []<br>}<br>} |
-| 회원별 게시글 삭제     | DELETE | user/login/{id}   |JWT Bearer | {<br>"msg": "삭제 성공",<br>"statusCode": 200<br>}                                                                                                                                                                                                                                  |
+| 회원별 게시글 삭제     | DELETE | /user/login/{id} |JWT Bearer | {<br>"msg": "삭제 성공",<br>"statusCode": 200<br>}                                                                                                                                                                                                                                  |
 
 ### 2022.12.19 요구사항에 따른 진행상황 
 1. 회원 가입 API 회원 권한 부여하기 (ADMIN, USER) 
@@ -91,3 +91,23 @@
    - API 명세는 아직 크게 달라진 것이 없어서 따로 첨부하지 않음.
    - 작업 상황 현재 Done!
    - 내일 댓글에 대한 작업을 이어나갈 예정.
+   
+### 2022.12.22 요구사항에 따른 진행상황 (모든 상황 완료)
+
+- ADMIN 회원은 모든 게시글, 댓글 수정 / 삭제 가능 - Done!
+- 로그인한 회원은 댓글을 추가 가능 - Done!
+- 댓글의 주인 or 권한이 관리자 인 경우 수정 / 삭제 가능 - Done!
+- 
+### 2022.12.22 요구사항에 따른 진행상황 API 명세( About Comment )
+
+| Function        | Method | URL                 | Request                                   | Response                                                                                                                 |
+|-----------------|--------|---------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| 댓글 작성           | POST   | /board/{id}/comment | JWT Bearer {<br>"contents": "String"<br>} | {<br>"id": "Long",<br>"contents": "String",<br>"createdAt": "LocalDateTime",<br>"modifiedAt": "LocalDateTime"<br>}       |
+| 해당 게시글의 댓글 전체조회 | GET    | /board/{id}/comment | --                                        | [<br>{<br>"id": "Long",<br>"contents": "String",<br>"createdAt": "LocalDateTime",<br>"modifiedAt": "LocalDateTime"<br>}<br>] |
+| 해당 게시글의 댓글 수정   | PUT    | /board/{id}/comment | JWT Bearer {<br>"contents": "String"<br>} |{<br>"id": "Long",<br>"contents": "String",<br>"createdAt": "LocalDateTime",<br>"modifiedAt": "LocalDateTime"<br>} |
+| 해당 게시글의 댓글 삭제   | DELETE | /board/comment/{id} | JWT Bearer | {<br>"msg": "삭제 성공",<br>"statusCode": 200<br>|
+
+### 마무리
+- DTO는 각 Controller마다 있어야 될 정도로 생각보다 많이 필요하다.
+- 연관 관계에서 특히 필요에 의한 양방향 연관관계 설정 시 순환오류를 생각하자
+- 순환오류는 Entity를 그대로 반환할 때 @RestController에 의한 Json직렬화에 의해 일어나므로, DTO로 해당 응답을 감싸서 응답하자!

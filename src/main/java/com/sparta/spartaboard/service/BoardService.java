@@ -2,7 +2,8 @@ package com.sparta.spartaboard.service;
 
 
 import com.sparta.spartaboard.dto.BoardRequestDTO;
-import com.sparta.spartaboard.dto.DeleteResponseDto;
+import com.sparta.spartaboard.dto.BoardResponseDto;
+import com.sparta.spartaboard.dto.ResponseMsgStatusCodeDto;
 import com.sparta.spartaboard.entity.Board;
 import com.sparta.spartaboard.entity.User;
 import com.sparta.spartaboard.entity.UserRoleEnum;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +32,23 @@ public class BoardService {
 
     private final JwtUtil jwtUtil;
 
+
+
     @Transactional
-    public List<Board> getBoardAll() {
-        return boardRepository.findAllByOrderByModifiedAtDesc();
+    public List<BoardResponseDto> getBoardAll() {
+
+        List<Board> boards = boardRepository.findAllByOrderByModifiedAtDesc();
+        List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+
+
+        for(Board board : boards){
+           boardResponseDtoList.add(new BoardResponseDto(board));
+        }
+        return boardResponseDtoList;
     }
 
     @Transactional
-    public Board createBoard(BoardRequestDTO boardDto, HttpServletRequest request) {
+    public BoardResponseDto createBoard(BoardRequestDTO boardDto, HttpServletRequest request) {
 
 
         // Request에서 Token 가져오기
@@ -61,20 +73,20 @@ public class BoardService {
 
             Board board = new Board(boardDto, user);
             boardRepository.save(board);
-            return board;
+            return new BoardResponseDto(board);
         }
         return null;
     }
 
     @Transactional
-    public Optional<Board> findBoardById(Long id) {
-        return Optional.ofNullable(boardRepository.findById(id).orElseThrow(
+    public Optional<BoardResponseDto> findBoardById(Long id) {
+        return Optional.ofNullable(new BoardResponseDto(boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("특정 게시글이 없습니다!")
-        ));
+        )));
     }
 
     @Transactional
-    public Board update(Long id, BoardRequestDTO boardDto, HttpServletRequest request) {
+    public BoardResponseDto update(Long id, BoardRequestDTO boardDto, HttpServletRequest request) {
 
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);
@@ -104,7 +116,7 @@ public class BoardService {
             if (board.getUser().getId() == user.getId() || user.getUserRoleEnum().equals(UserRoleEnum.ADMIN)) {
 
                 board.update(boardDto);
-                return board;
+                return new BoardResponseDto(board);
             }else{
                 throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 수정할 수 없습니다!");
             }
@@ -141,10 +153,9 @@ public class BoardService {
             if (board.getUser().getId() == user.getId() || user.getUserRoleEnum().equals(UserRoleEnum.ADMIN)) {
 
                 boardRepository.deleteById(id);
-                DeleteResponseDto deleteResponseDto = new DeleteResponseDto();
-                deleteResponseDto.setMsg("게시글 삭제 성공!");
-                deleteResponseDto.setStatusCode(HttpStatus.OK.value());
-                return ResponseEntity.status(HttpStatus.OK).body(deleteResponseDto);
+                ResponseMsgStatusCodeDto responseMsgStatusCodeDto = new ResponseMsgStatusCodeDto("게시글 삭제 성공!",HttpStatus.OK.value());
+
+                return ResponseEntity.status(HttpStatus.OK).body(responseMsgStatusCodeDto);
 
             }else{
                 throw new IllegalArgumentException("해당 사용자 혹은 관리자가 아니면 게시글을 삭제할 수 없습니다!");
@@ -155,4 +166,5 @@ public class BoardService {
         }
         return null;
     }
+
 }

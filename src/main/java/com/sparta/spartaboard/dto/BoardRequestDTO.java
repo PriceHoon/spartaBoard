@@ -9,7 +9,5 @@ public class BoardRequestDTO {
     private String title;
     private String username;
     private String contents;
-//    private String pwd;
-
 
 }
